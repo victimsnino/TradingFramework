@@ -93,7 +93,7 @@ jobs:
     - name: Run CMake
       uses: lukka/run-cmake@v10
       with:
-        configurePreset: ${{matrix.config.name}}
+        configurePreset: ${{matrix.config.name}}-tests
         buildPreset: ci-build
         testPreset: ci-tests
 
