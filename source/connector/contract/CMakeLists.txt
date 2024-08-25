@@ -1,0 +1,4 @@
+add_library(connector_contract INTERFACE)
+target_include_directories(connector_contract INTERFACE .)
+target_link_libraries(connector_contract INTERFACE rpp)
+
