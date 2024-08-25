@@ -25,7 +25,7 @@ namespace connector::contract
     {
         virtual ~interface() = default;
 
-        virtual utils::expected<ticker_info, std::string> get_ticker_info(const std::string& ticker) const = 0;
-        virtual rpp::dynamic_observable<ticker_event> get_ticker_events(const std::string& ticker) const = 0;
+        virtual utils::expected<ticker_info, std::string> get_ticker_info(const std::string& ticker) const   = 0;
+        virtual rpp::dynamic_observable<ticker_event>     get_ticker_events(const std::string& ticker) const = 0;
     };
 } // namespace connector::contract

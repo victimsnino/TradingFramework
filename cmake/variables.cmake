@@ -21,7 +21,7 @@ if(PROJECT_IS_TOP_LEVEL)
       set(CMAKE_C_COMPILER_LAUNCHER ${CCACHE})
       set(CMAKE_CXX_COMPILER_LAUNCHER ${CCACHE})
   endif(CCACHE)
-  
+
 endif()
 
 # ---- Warning guard ----

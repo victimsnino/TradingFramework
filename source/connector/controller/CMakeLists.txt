@@ -12,4 +12,3 @@ target_link_libraries(connector_controller
     PRIVATE
         connector_tinkoff
 )
-

@@ -54,16 +54,16 @@ macro(add_proto_target TARGET FOLDER)
         string(REPLACE ".proto" ".pb.h" OUTPUT_PB_HEADER "${PROTO_BINARY_DIR}/${REL_PATH}")
         string(REPLACE ".proto" ".grpc.pb.h" OUTPUT_GRPC_HEADER "${PROTO_BINARY_DIR}/${REL_PATH}")
         add_custom_command(
-            OUTPUT ${OUTPUT_PB_SOURCE} ${OUTPUT_PB_HEADER} ${OUTPUT_GRPC_SOURCE} ${OUTPUT_GRPC_HEADER} 
-            COMMAND protobuf::protoc 
+            OUTPUT ${OUTPUT_PB_SOURCE} ${OUTPUT_PB_HEADER} ${OUTPUT_GRPC_SOURCE} ${OUTPUT_GRPC_HEADER}
+            COMMAND protobuf::protoc
             ARGS ${f} --cpp_out=${PROTO_BINARY_DIR} --grpc_out=${PROTO_BINARY_DIR} --python_out=${PROTO_BINARY_DIR} --proto_path=${FOLDER} --plugin=protoc-gen-grpc=${grpc_cpp_plugin_location}
-            COMMAND ${CMAKE_COMMAND} 
+            COMMAND ${CMAKE_COMMAND}
             ARGS -DTARGET_FILE=${OUTPUT_PB_SOURCE} -P ${CMAKE_SOURCE_DIR}/cmake/rename_tinkoff_protobufs.cmake
-            COMMAND ${CMAKE_COMMAND} 
+            COMMAND ${CMAKE_COMMAND}
             ARGS -DTARGET_FILE=${OUTPUT_GRPC_SOURCE} -P ${CMAKE_SOURCE_DIR}/cmake/rename_tinkoff_protobufs.cmake
-            COMMAND ${CMAKE_COMMAND} 
+            COMMAND ${CMAKE_COMMAND}
             ARGS -DTARGET_FILE=${OUTPUT_PB_HEADER} -P ${CMAKE_SOURCE_DIR}/cmake/rename_tinkoff_protobufs.cmake
-            COMMAND ${CMAKE_COMMAND} 
+            COMMAND ${CMAKE_COMMAND}
             ARGS -DTARGET_FILE=${OUTPUT_GRPC_HEADER} -P ${CMAKE_SOURCE_DIR}/cmake/rename_tinkoff_protobufs.cmake
             )
         LIST(APPEND RES_FILES ${OUTPUT_PB_SOURCE})

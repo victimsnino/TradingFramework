@@ -90,27 +90,28 @@ namespace interaction::telegram
     contract::user_events get_users(const std::string& token, const contract::app_responses& app_responses)
     {
         return rpp::source::create<contract::user_event>([token, app_responses](const auto& observer) {
-            TgBot::Bot bot{token};
+                   TgBot::Bot bot{token};
 
-            fill_commands(bot, observer);
-            handle_events(app_responses, bot, observer);
+                   fill_commands(bot, observer);
+                   handle_events(app_responses, bot, observer);
 
-            try
-            {
-                TgBot::TgLongPoll long_poll(bot);
-                while (!observer.is_disposed()) {
-                    long_poll.start();
-                }
-            }
-            catch (TgBot::TgException& e)
-            {
-                observer.on_error(std::current_exception());
-            }
-        })
-        | rpp::ops::subscribe_on(rpp::schedulers::new_thread{})
-        | rpp::ops::observe_on(rpp::schedulers::new_thread{})
-        | rpp::ops::publish()
-        | rpp::ops::ref_count();
+                   try
+                   {
+                       TgBot::TgLongPoll long_poll(bot);
+                       while (!observer.is_disposed())
+                       {
+                           long_poll.start();
+                       }
+                   }
+                   catch (TgBot::TgException& e)
+                   {
+                       observer.on_error(std::current_exception());
+                   }
+               })
+             | rpp::ops::subscribe_on(rpp::schedulers::new_thread{})
+             | rpp::ops::observe_on(rpp::schedulers::new_thread{})
+             | rpp::ops::publish()
+             | rpp::ops::ref_count();
     }
 
 } // namespace interaction::telegram

@@ -1,4 +1,4 @@
-add_library(interaction_controller 
+add_library(interaction_controller
     STATIC
         interaction_controller.cpp
         interaction_controller.hpp
@@ -6,10 +6,9 @@ add_library(interaction_controller
 
 target_include_directories(interaction_controller PUBLIC .)
 
-target_link_libraries(interaction_controller 
-    PUBLIC 
+target_link_libraries(interaction_controller
+    PUBLIC
         interaction_contract
     PRIVATE
         interaction_telegram
 )
-

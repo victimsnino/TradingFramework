@@ -2,19 +2,19 @@
 
 #include <rpp/observables/dynamic_observable.hpp>
 #include <rpp/operators/combine_latest.hpp>
+#include <rpp/operators/finally.hpp>
 #include <rpp/operators/flat_map.hpp>
 #include <rpp/operators/group_by.hpp>
 #include <rpp/operators/publish.hpp>
 #include <rpp/operators/ref_count.hpp>
-#include <rpp/operators/finally.hpp>
 #include <rpp/sources/create.hpp>
 #include <rpp/sources/just.hpp>
 #include <rpp/sources/never.hpp>
-#include <rppgrpc/client_reactor.hpp>
 
 #include <grpc++/create_channel.h>
 #include <investapi_proto/instruments.grpc.pb.h>
 #include <investapi_proto/marketdata.grpc.pb.h>
+#include <rppgrpc/client_reactor.hpp>
 
 
 constexpr auto URL = "invest-public-api.tinkoff.ru:443";
@@ -25,7 +25,8 @@ namespace connector::tinkoff
 {
     namespace
     {
-        auto subscribe_to_ticker(const std::shared_ptr<tf::MarketDataStreamService::Stub>& market, const std::string& ticker) {
+        auto subscribe_to_ticker(const std::shared_ptr<tf::MarketDataStreamService::Stub>& market, const std::string& ticker)
+        {
             tf::MarketDataServerSideStreamRequest req{};
 
             auto& price = *req.mutable_subscribe_last_price_request();
@@ -96,9 +97,9 @@ namespace connector::tinkoff
                         | rpp::ops::map([](const tf::MarketDataResponse& response) {
                               return contract::ticker_event{.info = response.Utf8DebugString()};
                           })
-                        | rpp::ops::finally([ctx=ctx] noexcept {
-                            ctx->TryCancel();
-                        })
+                        | rpp::ops::finally([ctx = ctx] noexcept {
+                              ctx->TryCancel();
+                          })
                         | rpp::ops::publish()
                         | rpp::ops::ref_count()
                         | rpp::ops::subscribe(std::forward<TObs>(obs));

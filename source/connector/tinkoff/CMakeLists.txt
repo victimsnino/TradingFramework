@@ -14,4 +14,3 @@ target_link_libraries(connector_tinkoff
         rpp
         connector_contract
 )
-

@@ -4,6 +4,6 @@
 
 TEST_CASE("Name is TradingFramework", "[library]")
 {
-  auto const lib = library {};
-  REQUIRE(lib.name == "TradingFramework");
+    auto const lib = library{};
+    REQUIRE(lib.name == "TradingFramework");
 }

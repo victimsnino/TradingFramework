@@ -8,5 +8,3 @@ target_link_libraries(trading_framework
         interaction_controller
         connector_controller
 )
-
-

@@ -1,4 +1,3 @@
 add_library(interaction_contract INTERFACE)
 target_include_directories(interaction_contract INTERFACE .)
 target_link_libraries(interaction_contract INTERFACE rpp connector_contract)
-

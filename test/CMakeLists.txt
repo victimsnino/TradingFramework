@@ -22,5 +22,3 @@ target_compile_features(TradingFramework_test PRIVATE cxx_std_20)
 catch_discover_tests(TradingFramework_test)
 
 # ---- End-of-file commands ----
-
-
