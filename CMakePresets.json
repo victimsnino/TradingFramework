@@ -26,7 +26,8 @@
       "hidden": true,
       "inherits": "cmake-pedantic",
       "cacheVariables": {
-        "DEVELOPER_MODE": "ON"
+        "DEVELOPER_MODE": "ON",
+        "CMAKE_EXPORT_COMPILE_COMMANDS" : "ON"
       }
     },
     {
