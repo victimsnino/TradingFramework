@@ -14,47 +14,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  coverage:
-    runs-on: ubuntu-22.04
-
-    if: github.repository_owner == 'victimsnino'
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Install LCov
-      run: sudo apt-get update -q
-        && sudo apt-get install lcov -q -y
-
-    - name: Install Python
-      uses: actions/setup-python@v5
-      with: { python-version: "3.12" }
-
-    - name: Conan cache
-      uses: actions/cache@v4
-      with:
-        path: conan_cache_save.tgz
-        key: conan-coverage-${{ hashFiles('conan*.[pl][yo]*') }}
-
-    - name: Install dependencies
-      run: bash < .github/scripts/conan-ci-setup.sh
-
-    - name: Run CMake
-      uses: lukka/run-cmake@v10
-      with:
-        configurePreset: ci-coverage
-        buildPreset: ci-build
-        testPreset: ci-tests
-
-    - name: Process coverage info
-      run: cmake --build build/coverage -t coverage
-
-    - name: Submit to codecov.io
-      uses: codecov/codecov-action@v4
-      with:
-        file: build/coverage/coverage.info
-        token: ${{ secrets.CODECOV_TOKEN }}
-
   sanitize:
     strategy:
       matrix:
@@ -119,14 +78,14 @@ jobs:
       uses: actions/cache@v4
       with:
         path: conan_cache_save.tgz
-        key: conan-${{ matrix.os }}-${{ hashFiles('conan*.[pl][yo]*') }}
+        key: conan-tests-${{ matrix.config.os }}-${{ hashFiles('conan*.[pl][yo]*') }}
 
     - name: Install dependencies
       shell: bash
       run: bash < .github/scripts/conan-ci-setup.sh
 
     - name: Setup MultiToolTask
-      if: matrix.os == 'windows-2022'
+      if: matrix.config.os == 'windows-2022'
       run: |
         Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
         Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
