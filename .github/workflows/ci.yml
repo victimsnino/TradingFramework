@@ -35,15 +35,12 @@ jobs:
     - name: Install dependencies
       run: bash < .github/scripts/conan-ci-setup.sh
 
-    - name: Configure
-      run: cmake --preset=ci-coverage
-
-    - name: Build
-      run: cmake --build build/coverage -j 2
-
-    - name: Test
-      working-directory: build/coverage
-      run: ctest --output-on-failure --no-tests=error -j 2
+    - name: Run CMake
+      uses: lukka/run-cmake@v10
+      with:
+        configurePreset: ci-coverage
+        buildPreset: ci-build
+        testPreset: ci-tests
 
     - name: Process coverage info
       run: cmake --build build/coverage -t coverage
@@ -55,9 +52,13 @@ jobs:
         token: ${{ secrets.CODECOV_TOKEN }}
 
   sanitize:
-    runs-on: ubuntu-22.04
+    strategy:
+      matrix:
+        sanitizer: ["tsan", "asan", "lsan", "ubsan"]
 
-    env: { CXX: clang++-14 }
+    name: Sanitize - ${{ matrix.sanitizer }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
 
     steps:
     - uses: actions/checkout@v4
@@ -75,31 +76,24 @@ jobs:
     - name: Install dependencies
       run: bash < .github/scripts/conan-ci-setup.sh
 
-    - name: Configure
-      run: cmake --preset=ci-sanitize
-
-    - name: Build
-      run: cmake --build build/sanitize -j 2
-
-    - name: Test
-      working-directory: build/sanitize
-      env:
-        ASAN_OPTIONS: "strict_string_checks=1:\
-          detect_stack_use_after_return=1:\
-          check_initialization_order=1:\
-          strict_init_order=1:\
-          detect_leaks=1:\
-          halt_on_error=1"
-        UBSAN_OPTIONS: "print_stacktrace=1:\
-          halt_on_error=1"
-      run: ctest --output-on-failure --no-tests=error -j 2
+    - name: Run CMake
+      uses: lukka/run-cmake@v10
+      with:
+        configurePreset: ci-sanitize-${{ matrix.sanitizer }}
+        buildPreset: ci-build
+        testPreset: ci-sanitize
 
   test:
     strategy:
       matrix:
-        os: [macos-14, ubuntu-22.04, windows-2022]
+        config: [{name: ci-ubuntu-gcc,  os: ubuntu-latest},
+                {name: ci-ubuntu-clang, os: ubuntu-latest},
+                {name: ci-windows,      os: windows-latest},
+                {name: ci-macos,        os: macos-12}]
 
-    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    runs-on: ${{ matrix.config.os }}
+    name: Cache deps on ${{ matrix.config.name }}
 
     steps:
     - uses: actions/checkout@v4
@@ -133,19 +127,12 @@ jobs:
         Add-Content "$env:GITHUB_ENV" 'UseMultiToolTask=true'
         Add-Content "$env:GITHUB_ENV" 'EnforceProcessCountAcrossBuilds=true'
 
-    - name: Configure
-      shell: pwsh
-      run: cmake "--preset=ci-$("${{ matrix.os }}".split("-")[0])"
-
-    - name: Build
-      run: cmake --build build --config Release -j 2
-
-    - name: Install
-      run: cmake --install build --config Release --prefix prefix
-
-    - name: Test
-      working-directory: build
-      run: ctest --output-on-failure --no-tests=error -C Release -j 2
+    - name: Run CMake
+      uses: lukka/run-cmake@v10
+      with:
+        configurePreset: ${{matrix.config.name}}
+        buildPreset: ci-build
+        testPreset: ci-tests
 
   docs:
     # Deploy docs only when builds succeed

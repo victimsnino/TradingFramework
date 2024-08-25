@@ -115,27 +115,18 @@
         "CMAKE_MAP_IMPORTED_CONFIG_COVERAGE": "Coverage;RelWithDebInfo;Release;Debug;"
       }
     },
-    {
-      "name": "ci-coverage",
-      "inherits": ["coverage-linux", "dev-mode", "conan"],
-      "cacheVariables": {
-        "COVERAGE_HTML_COMMAND": ""
-      }
-    },
-    {
-      "name": "ci-sanitize",
-      "binaryDir": "${sourceDir}/build/sanitize",
-      "inherits": ["ci-linux", "dev-mode", "conan"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Sanitize",
-        "CMAKE_CXX_FLAGS_SANITIZE": "-U_FORTIFY_SOURCE -O2 -g -fsanitize=address,undefined -fno-omit-frame-pointer -fno-common",
-        "CMAKE_MAP_IMPORTED_CONFIG_SANITIZE": "Sanitize;RelWithDebInfo;Release;Debug;"
-      }
-    },
+
     {
       "name": "ci-build",
       "binaryDir": "${sourceDir}/build",
       "hidden": true
+    },
+    {
+      "name" : "build-tests",
+      "hidden": true,
+      "cacheVariables": {
+        "BUILD_TESTING" : "ON"
+      }
     },
     {
       "name": "ci-multi-config",
@@ -146,16 +137,127 @@
       }
     },
     {
+      "name": "ci-gcc",
+      "hidden": true,
+      "environment": {
+        "CC" : "gcc-10",
+        "CXX": "g++-10"
+      },
+      "cacheVariables": {
+        "RPP_GCOV_TOOL" : "/usr/bin/gcov-10"
+      }
+    },
+    {
+      "name": "ci-clang",
+      "hidden": true,
+      "environment": {
+        "CC" : "clang-14",
+        "CXX": "clang++-14"
+      }
+    },
+
+
+
+    {
+      "name": "ci-coverage",
+      "inherits": ["coverage-linux", "dev-mode", "conan"],
+      "cacheVariables": {
+        "COVERAGE_HTML_COMMAND": ""
+      }
+    },
+    {
+      "name": "ci-sanitize-tsan",
+      "inherits": ["ci-build", "build-tests", "ci-unix", "ci-clang"],
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fsanitize=thread -g -O1"
+      }
+    },
+    {
+      "name": "ci-sanitize-asan",
+      "inherits": ["ci-build", "build-tests", "ci-unix", "ci-clang"],
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fsanitize=address -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1"
+      }
+    },
+    {
+      "name": "ci-sanitize-lsan",
+      "inherits": ["ci-build", "build-tests", "ci-unix", "ci-clang"],
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fsanitize=leak -fno-omit-frame-pointer -g -O1"
+      }
+    },
+    {
+      "name": "ci-sanitize-msan",
+      "inherits": ["ci-build", "build-tests", "ci-unix", "ci-clang"],
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fsanitize=memory -fno-optimize-sibling-calls -fsanitize-memory-track-origins=2 -fno-omit-frame-pointer -g -O2"
+      }
+    },
+    {
+      "name": "ci-sanitize-ubsan",
+      "inherits": ["ci-build", "build-tests", "ci-unix", "ci-clang"],
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-fsanitize=undefined"
+      }
+    },
+
+    {
       "name": "ci-macos",
       "inherits": ["ci-build", "ci-darwin", "dev-mode", "ci-multi-config", "conan"]
     },
     {
-      "name": "ci-ubuntu",
-      "inherits": ["ci-build", "ci-linux", "clang-tidy", "conan", "cppcheck", "dev-mode"]
+      "name": "ci-ubuntu-clang",
+      "inherits": ["ci-build", "ci-linux", "clang-tidy", "conan", "cppcheck", "dev-mode", "ci-clang"]
+    },
+    {
+      "name": "ci-ubuntu-gcc",
+      "inherits": ["ci-build", "ci-linux", "clang-tidy", "conan", "cppcheck", "dev-mode", "ci-gcc"]
     },
     {
       "name": "ci-windows",
       "inherits": ["ci-build", "ci-win64", "dev-mode", "ci-multi-config", "conan"]
+    }
+  ],
+  "buildPresets" :[
+    {
+      "name" : "ci-build",
+      "jobs" : 2,
+      "configurePreset" : "ci-build"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "ci-tests-base",
+      "hidden": true,
+      "configurePreset" : "ci-build",
+      "environment": {
+        "QT_QPA_PLATFORM": "offscreen"
+      },
+      "output": {
+        "outputOnFailure": true
+      },
+      "execution": {
+        "timeout": 60
+      }
+    },
+    {
+      "name": "ci-tests",
+      "inherits": ["ci-tests-base"],
+      "configuration": "Release"
+    },
+    {
+      "name": "ci-tests-debug",
+      "inherits": ["ci-tests-base"],
+      "configuration": "Debug"
+    },
+    {
+      "name": "ci-sanitize",
+      "inherits" : ["ci-tests"],
+      "environment": {
+        "ASAN_OPTIONS": "strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1:detect_leaks=1:halt_on_error=1",
+        "UBSAN_OPTIONS": "print_stacktrace=1:halt_on_error=1",
+        "TSAN_OPTIONS": "second_deadlock_stack=1"
+      }
     }
   ]
 }
