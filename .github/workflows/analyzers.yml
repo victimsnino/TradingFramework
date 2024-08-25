@@ -129,7 +129,7 @@ jobs:
     - name: Submit to codecov.io
       uses: codecov/codecov-action@v4
       with:
-        file: build/test_results/coverage.txt
+        file: build/coverage.txt
         override_branch: ${{ github.event.workflow_run.head_branch }}
         override_pr: ${{ steps.source-run-info.outputs.pullRequestNumber }}
         override_commit: ${{ github.event.workflow_run.head_sha }}
