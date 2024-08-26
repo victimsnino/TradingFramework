@@ -299,12 +299,12 @@ endfunction()
 
 
 function(detect_build_type build_type)
-    get_property(multiconfig_generator GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-    if(NOT multiconfig_generator)
+    # get_property(multiconfig_generator GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+    # if(NOT multiconfig_generator)
         # Only set when we know we are in a single-configuration generator
         # Note: we may want to fail early if `CMAKE_BUILD_TYPE` is not defined
         set(${build_type} ${CMAKE_BUILD_TYPE} PARENT_SCOPE)
-    endif()
+    # endif()
 endfunction()
 
 
@@ -587,7 +587,7 @@ macro(conan_provide_dependency method package_name)
             endif()
             set(generator "-g;CMakeDeps")
         endif()
-        get_property(_multiconfig_generator GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+        # get_property(_multiconfig_generator GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
         # if(NOT _multiconfig_generator)
         message(STATUS "CMake-Conan: Installing single configuration ${CMAKE_BUILD_TYPE}")
         conan_install(${_host_profile_flags} ${_build_profile_flags} ${CONAN_INSTALL_ARGS} ${generator})
