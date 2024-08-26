@@ -25,18 +25,21 @@ jobs:
         repository: ${{ github.event.workflow_run.head_repository.full_name }}
         ref: ${{ github.event.workflow_run.head_branch }}
 
-    - name: Install Python
-      uses: actions/setup-python@v5
-      with: { python-version: "3.12" }
+    - name: get conan
+      uses: turtlebrowser/get-conan@main
 
-    - name: Conan cache
+    - name: cache deps
       uses: actions/cache@v4
       with:
-        path: conan_cache_save.tgz
-        key: conan-pvs-${{ hashFiles('conan*.[pl][yo]*') }}
+          path: |
+            ~/.conan2
+            /Users/runner/.conan2/
+          key: deps-ci-ubuntu-clang-Release-${{ hashFiles('**/conanfile.py') }}
+          restore-keys: deps-ci-ubuntu-clang-Release
 
-    - name: Install dependencies
-      run: bash < .github/scripts/conan-ci-setup.sh
+    - name: conan detect profile
+      run: |
+        conan profile detect --force
 
     - name: Install tools
       id: setup
@@ -90,18 +93,21 @@ jobs:
         repository: ${{ github.event.workflow_run.head_repository.full_name }}
         ref: ${{ github.event.workflow_run.head_branch }}
 
-    - name: Install Python
-      uses: actions/setup-python@v5
-      with: { python-version: "3.12" }
+    - name: get conan
+      uses: turtlebrowser/get-conan@main
 
-    - name: Conan cache
+    - name: cache deps
       uses: actions/cache@v4
       with:
-        path: conan_cache_save.tgz
-        key: conan-coverage-${{ hashFiles('conan*.[pl][yo]*') }}
+          path: |
+            ~/.conan2
+            /Users/runner/.conan2/
+          key: deps-ci-ubuntu-clang-Release-${{ hashFiles('**/conanfile.py') }}
+          restore-keys: deps-ci-ubuntu-clang-Release
 
-    - name: Install dependencies
-      run: bash < .github/scripts/conan-ci-setup.sh
+    - name: conan detect profile
+      run: |
+        conan profile detect --force
 
     - name: Install llvm
       run: sudo apt-get update -q && sudo apt-get install llvm -q -y
