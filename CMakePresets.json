@@ -82,7 +82,6 @@
     {
       "name": "ci-linux",
       "inherits": ["flags-gcc-clang"],
-      "generator": "Unix Makefiles",
       "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
@@ -91,13 +90,11 @@
     {
       "name": "ci-darwin",
       "inherits": ["flags-appleclang"],
-      "generator": "Xcode",
       "hidden": true
     },
     {
       "name": "ci-win64",
       "inherits": ["flags-msvc"],
-      "generator": "Visual Studio 17 2022",
       "architecture": "x64",
       "hidden": true
     },
