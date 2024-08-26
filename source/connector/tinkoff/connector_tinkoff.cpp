@@ -97,7 +97,7 @@ namespace connector::tinkoff
                         | rpp::ops::map([](const tf::MarketDataResponse& response) {
                               return contract::ticker_event{.info = response.Utf8DebugString()};
                           })
-                        | rpp::ops::finally([ctx = ctx] noexcept {
+                        | rpp::ops::finally([ctx = ctx]() noexcept {
                               ctx->TryCancel();
                           })
                         | rpp::ops::publish()
