@@ -128,14 +128,6 @@
       }
     },
     {
-      "name": "ci-multi-config",
-      "description": "Speed up multi-config generators by generating only one configuration instead of the defaults",
-      "hidden": true,
-      "cacheVariables": {
-        "CMAKE_CONFIGURATION_TYPES": "Release"
-      }
-    },
-    {
       "name": "ci-gcc",
       "hidden": true,
       "environment": {
@@ -202,7 +194,7 @@
 
     {
       "name": "ci-macos",
-      "inherits": ["ci-build", "ci-darwin", "dev-mode", "ci-multi-config"]
+      "inherits": ["ci-build", "ci-darwin", "dev-mode"]
     },
     {
       "name": "ci-ubuntu-clang",
@@ -218,7 +210,7 @@
     },
     {
       "name": "ci-windows",
-      "inherits": ["ci-build", "ci-win64", "dev-mode", "ci-multi-config"]
+      "inherits": ["ci-build", "ci-win64", "dev-mode"]
     },
 
     {
