@@ -138,7 +138,7 @@
 
     {
       "name": "ci-coverage",
-      "inherits": ["ci-build", "build-tests", "ci-unix", "ci-clang"],
+      "inherits": ["ci-build", "build-tests", "ci-linux", "ci-clang"],
       "cacheVariables": {
         "CMAKE_CXX_FLAGS": "-O0 -g -fprofile-instr-generate -fcoverage-mapping --coverage"
       }
