@@ -112,7 +112,7 @@ jobs:
 
     timeout-minutes: 120
     runs-on: ${{ matrix.config.os }}
-    name: Cache deps on ${{ matrix.config.name }}
+    name: Tests - ${{ matrix.config.name }} - ${{ matrix.build_type.config }}
 
     steps:
     - uses: actions/checkout@v4
