@@ -1,6 +1,5 @@
 #include "interaction_telegram.hpp"
 
-#include <rpp/observables/dynamic_observable.hpp>
 #include <rpp/operators/observe_on.hpp>
 #include <rpp/operators/publish.hpp>
 #include <rpp/operators/ref_count.hpp>

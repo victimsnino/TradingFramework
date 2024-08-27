@@ -1,6 +1,5 @@
 
 
-#include <rpp/observables/dynamic_observable.hpp>
 #include <rpp/operators/as_blocking.hpp>
 #include <rpp/operators/subscribe.hpp>
 #include <rpp/sources/never.hpp>
