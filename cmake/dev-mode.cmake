@@ -2,9 +2,4 @@ include(CTest)
 
 option(BUILD_TESTING "Build test targets" OFF)
 
-option(BUILD_MCSS_DOCS "Build documentation using Doxygen and m.css" OFF)
-if(BUILD_MCSS_DOCS)
-  include(cmake/docs.cmake)
-endif()
-
 include(cmake/coverage.cmake)

@@ -1,6 +1,5 @@
 #include "interaction_controller.hpp"
 
-#include <rpp/observables/dynamic_observable.hpp>
 #include <rpp/sources/never.hpp>
 
 #include <interaction_telegram.hpp>

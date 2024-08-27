@@ -1,6 +1,5 @@
 #include "connector_tinkoff.hpp"
 
-#include <rpp/observables/dynamic_observable.hpp>
 #include <rpp/operators/combine_latest.hpp>
 #include <rpp/operators/finally.hpp>
 #include <rpp/operators/flat_map.hpp>

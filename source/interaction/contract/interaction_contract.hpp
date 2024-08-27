@@ -2,6 +2,8 @@
 
 #include <rpp/observables/fwd.hpp>
 
+#include <rpp/observables/dynamic_observable.hpp>
+
 #include <chrono>
 #include <string>
 #include <variant>
