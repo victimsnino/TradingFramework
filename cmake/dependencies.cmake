@@ -99,3 +99,9 @@ add_proto_target(investapi_proto ${investapi_SOURCE_DIR}/src/docs/contracts)
 foreach(TARGET_NAME "rppqt;rppgrpc")
     set_target_properties(${TARGET_NAME} PROPERTIES FOLDER 3rdparty)
 endforeach()
+
+
+if (BUILD_TESTING)
+    find_package(Catch2 REQUIRED)
+    include(Catch)
+endif()

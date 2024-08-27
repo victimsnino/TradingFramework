@@ -64,7 +64,7 @@ EmptyLineAfterAccessModifier: Never
 EmptyLineBeforeAccessModifier: Always
 ExperimentalAutoDetectBinPacking: true
 # AllowShortCompoundRequirementOnASingleLine: true
-RequiresExpressionIndentation: OuterScope
+# RequiresExpressionIndentation: OuterScope
 FixNamespaceComments: true
 IncludeBlocks: Regroup
 IncludeCategories:
