@@ -102,6 +102,14 @@ endforeach()
 
 
 if (BUILD_TESTING)
-    find_package(Catch2 REQUIRED)
+    find_package(Catch2 REQUIRED COMPONENTS Catch2WithMain)
     include(Catch)
+
+    find_package(trompeloeil REQUIRED)
 endif()
+
+macro(add_tests_subdirectory dir)
+    if (BUILD_TESTING)
+        add_subdirectory(${dir})
+    endif()
+endmacro()

@@ -8,12 +8,10 @@ target_include_directories(interaction_telegram PUBLIC .)
 
 target_link_libraries(interaction_telegram
     PRIVATE
-        rpp
-        tgbot::tgbot
-        utils
-        fmt::fmt
+        interaction_telegram_impl
     PUBLIC
         interaction_contract
 )
 
-add_subdirectory(app)
+add_subdirectory(impl)
+add_tests_subdirectory(ut)

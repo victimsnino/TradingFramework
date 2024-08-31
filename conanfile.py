@@ -4,6 +4,9 @@ from conan import ConanFile
 class Recipe(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     generators = "CMakeDeps", "CMakeToolchain"
+    default_options  = {
+        "boost/*:without_test" : True
+    }
 
     def requirements(self):
         self.requires("grpc/1.54.3", transitive_libs=True, transitive_headers=True)
@@ -12,4 +15,5 @@ class Recipe(ConanFile):
         self.requires("tgbot/1.7.2")
 
     def build_requirements(self):
-        self.test_requires("catch2/3.6.0")
+        self.test_requires("catch2/3.7.0")
+        self.test_requires("trompeloeil/47")
