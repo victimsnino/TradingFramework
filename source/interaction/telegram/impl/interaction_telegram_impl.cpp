@@ -125,7 +125,6 @@ namespace interaction::telegram::impl
                    }
                })
              | rpp::ops::subscribe_on(rpp::schedulers::new_thread{})
-             | rpp::ops::observe_on(rpp::schedulers::new_thread{})
              | rpp::ops::publish()
              | rpp::ops::ref_count();
     }
