@@ -17,10 +17,9 @@ namespace connector::contract
 
     struct ticker_event
     {
-        std::string info{};
-        // std::string ticker{};
-        // std::chrono::system_clock::time_point time{};
-        // double                                price{};
+        std::string                           ticker{};
+        std::chrono::system_clock::time_point time{};
+        double                                price{};
     };
 
     struct interface
