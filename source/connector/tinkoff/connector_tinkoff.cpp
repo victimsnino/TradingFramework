@@ -119,7 +119,7 @@ namespace connector::tinkoff
                               return response.has_last_price();
                           })
                         | rpp::ops::map([ticker](const tf::MarketDataResponse& response) {
-                              return contract::ticker_event{.ticker = ticker, .price = quotation_to_double(response.last_price().price()), .time = timestamp_to_timepoint(response.last_price().time())};
+                              return contract::ticker_event{.ticker = ticker, .time = timestamp_to_timepoint(response.last_price().time()), .price = quotation_to_double(response.last_price().price())};
                           })
                         | rpp::ops::finally([ctx = ctx]() noexcept {
                               ctx->TryCancel();
