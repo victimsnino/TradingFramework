@@ -26,7 +26,7 @@ namespace
 } // namespace
 
 
-int main(int argc, char** argv)
+int main(int argc, char** argv) // NOLINT
 {
     ENSURE(argc == 3);
     const std::string                                                   invest_token   = argv[1];

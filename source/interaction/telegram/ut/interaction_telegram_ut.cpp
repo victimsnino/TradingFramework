@@ -15,7 +15,7 @@ using namespace interaction::telegram;
 namespace
 {
 
-    struct MockClient final : public trompeloeil::mock_interface<TgBot::HttpClient>
+    struct mock_client final : public trompeloeil::mock_interface<TgBot::HttpClient>
     {
         IMPLEMENT_CONST_MOCK2(makeRequest);
 
@@ -31,7 +31,7 @@ namespace
 } // namespace
 TEST_CASE("get_users")
 {
-    MockClient mock{};
+    mock_client mock{};
     // ALLOW_CALL(mock, makeRequest(trompeloeil::_, trompeloeil::_)).SIDE_EFFECT({std::cout << _1 << std::endl; }).RETURN("");
     // interaction::telegram::impl::get_users("", rpp::source::never<interaction::contract::app_response>(), &mock).subscribe([](const auto&){});
 
