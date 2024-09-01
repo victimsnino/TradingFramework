@@ -30,10 +30,9 @@ namespace
         bot.getApi().setMyCommands(commands);
     }
 
-    template<std::invocable<const TgBot::Message::Ptr&> Fn>
-    void add_command(TgBot::Bot& bot, const command_info& command_info, Fn&& handle)
+    void add_command(TgBot::Bot& bot, const command_info& command_info, const TgBot::EventBroadcaster::MessageListener& handle)
     {
-        bot.getEvents().onCommand(command_info.command, std::forward<Fn>(handle));
+        bot.getEvents().onCommand(command_info.command, handle);
 
         add_command(bot, command_info);
     }
