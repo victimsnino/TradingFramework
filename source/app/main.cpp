@@ -18,7 +18,7 @@ namespace
                                      },
                                      [connector](const interaction::contract::subscribe_to_ticker& event) {
                                          return connector->get_ticker_events(event.ticker) | rpp::ops::map([ticker = event.ticker](const connector::contract::ticker_event& r) -> interaction::contract::app_response::payload_t {
-                                                    return interaction::contract::subscribe_to_ticker::response{.ticker = ticker, .price = r.price, .time = r.time};
+                                                    return interaction::contract::subscribe_to_ticker::response{.ticker = ticker, .time = r.time, .price = r.price};
                                                 });
                                      }}(r);
         };
