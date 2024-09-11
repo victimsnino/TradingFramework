@@ -13,19 +13,16 @@ namespace interaction::contract
     struct subscribe_to_ticker
     {
         std::string ticker{};
-
         struct response
         {
-            std::string ticker{};
-            std::string details{};
-            // std::chrono::system_clock::time_point time{};
-            // double                                price{};
+            std::string                           ticker{};
+            std::chrono::system_clock::time_point time{};
+            double                                price{};
         };
     };
     struct get_ticker_info
     {
         std::string ticker{};
-
         struct response
         {
             std::string ticker{};

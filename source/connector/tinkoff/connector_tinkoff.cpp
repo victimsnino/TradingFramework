@@ -1,6 +1,7 @@
 #include "connector_tinkoff.hpp"
 
 #include <rpp/operators/combine_latest.hpp>
+#include <rpp/operators/filter.hpp>
 #include <rpp/operators/finally.hpp>
 #include <rpp/operators/flat_map.hpp>
 #include <rpp/operators/group_by.hpp>
@@ -10,10 +11,14 @@
 #include <rpp/sources/just.hpp>
 #include <rpp/sources/never.hpp>
 
+#include <common.pb.h>
+#include <google/protobuf/timestamp.pb.h>
 #include <grpc++/create_channel.h>
 #include <investapi_proto/instruments.grpc.pb.h>
 #include <investapi_proto/marketdata.grpc.pb.h>
 #include <rppgrpc/client_reactor.hpp>
+
+#include <chrono>
 
 
 constexpr auto URL = "invest-public-api.tinkoff.ru:443";
@@ -63,6 +68,23 @@ namespace connector::tinkoff
             grpc::string m_token;
         };
 
+        double quotation_to_double(const tf::Quotation& q)
+        {
+            double res  = q.units();
+            double rest = q.nano();
+            while (abs(rest) >= 1)
+            {
+                rest /= 10;
+            }
+
+            return res + rest;
+        }
+
+        std::chrono::system_clock::time_point timestamp_to_timepoint(const google::protobuf::Timestamp& t)
+        {
+            return std::chrono::system_clock::time_point{std::chrono::seconds{t.seconds()} + std::chrono::nanoseconds{t.nanos()}};
+        }
+
         class connector_tinkoff final : public connector::contract::interface
         {
         public:
@@ -93,8 +115,11 @@ namespace connector::tinkoff
                     const auto [ctx, reactor] = subscribe_to_ticker(market, ticker);
 
                     reactor->get_observable()
-                        | rpp::ops::map([](const tf::MarketDataResponse& response) {
-                              return contract::ticker_event{.info = response.Utf8DebugString()};
+                        | rpp::ops::filter([](const tf::MarketDataResponse& response) {
+                              return response.has_last_price();
+                          })
+                        | rpp::ops::map([ticker](const tf::MarketDataResponse& response) {
+                              return contract::ticker_event{.ticker = ticker, .time = timestamp_to_timepoint(response.last_price().time()), .price = quotation_to_double(response.last_price().price())};
                           })
                         | rpp::ops::finally([ctx = ctx]() noexcept {
                               ctx->TryCancel();

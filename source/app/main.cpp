@@ -18,7 +18,7 @@ namespace
                                      },
                                      [connector](const interaction::contract::subscribe_to_ticker& event) {
                                          return connector->get_ticker_events(event.ticker) | rpp::ops::map([ticker = event.ticker](const connector::contract::ticker_event& r) -> interaction::contract::app_response::payload_t {
-                                                    return interaction::contract::subscribe_to_ticker::response{.ticker = ticker, .details = r.info};
+                                                    return interaction::contract::subscribe_to_ticker::response{.ticker = ticker, .time = r.time, .price = r.price};
                                                 });
                                      }}(r);
         };
@@ -26,7 +26,7 @@ namespace
 } // namespace
 
 
-int main(int argc, char** argv)
+int main(int argc, char** argv) // NOLINT
 {
     ENSURE(argc == 3);
     const std::string                                                   invest_token   = argv[1];
